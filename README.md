@@ -18,7 +18,9 @@ Or install it yourself as:
 
 ## Usage
 
-Once the code is `require`d (which happens automatically if you are using bundler) you can use the following URL syntax in the `REDIS_URL` environment variable, or passed to `Redis.new(url: ...)`:
+`require 'redis/sentinel/url'`
+
+You can then use the following URL syntax in the `REDIS_URL` environment variable, or passed to `Redis.new(url: ...)`:
 
 `redis+sentinel://host[:port][/service_name[/db]][?param1=value1[&param2=value=2&...]]`
 
