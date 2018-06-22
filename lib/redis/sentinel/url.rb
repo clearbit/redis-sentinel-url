@@ -44,25 +44,25 @@ class Redis
         uri_options
       end
     end
+  end
 
-    module OptionParser
-      def _parse_options(options)
-        return options if options[:_parsed]
+  module SentinelURLParser
+    def initialize(options = {})
+      return super unless options[:url]
 
-        default_url = ::Redis::Client::DEFAULTS[:url]
-        default_url = default_url.call if default_url.respond_to?(:call)
+      default_url = ::Redis::Client::DEFAULTS[:url]
+      default_url = default_url.call if default_url.respond_to?(:call)
 
-        url = options[:url] || default_url
-        if url.to_s.start_with?('redis+sentinel://')
-          options = options.merge(Redis::Sentinel::URL.parse(url))
-        end
-
-        super(options)
+      url = options[:url] || default_url
+      if url.to_s.start_with?('redis+sentinel://')
+        options = options.merge(Redis::Sentinel::URL.parse(url))
       end
+
+      super(options)
     end
   end
 end
 
-class ::Redis::Client
-  prepend Redis::Sentinel::OptionParser
+class ::Redis
+  prepend Redis::SentinelURLParser
 end
