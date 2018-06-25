@@ -48,12 +48,9 @@ class Redis
 
   module SentinelURLParser
     def initialize(options = {})
-      return super unless options[:url]
+      url = options[:url] || ::Redis::Client::DEFAULTS[:url]
+      url = url.call if url.respond_to?(:call)
 
-      default_url = ::Redis::Client::DEFAULTS[:url]
-      default_url = default_url.call if default_url.respond_to?(:call)
-
-      url = options[:url] || default_url
       if url.to_s.start_with?('redis+sentinel://')
         options = options.merge(Redis::Sentinel::URL.parse(url))
       end

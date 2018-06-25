@@ -5,6 +5,16 @@ class Redis::Sentinel::UrlTest < Minitest::Test
     Redis.new
   end
 
+  def test_parses_default_env_with_empty_options
+    ENV['REDIS_URL'] = 'redis+sentinel://redis-sentinel.svc.cluster.local:26380/mymaster'
+
+    redis = Redis.new
+    assert_equal 'redis://mymaster', redis._client.options[:url]
+    assert_equal [{ host: 'redis-sentinel.svc.cluster.local', port: 26380 }], redis._client.options[:sentinels]
+
+    ENV.delete('REDIS_URL')
+  end
+
   def test_passes_through_redis_urls
     redis = Redis.new(url: 'redis://localhost')
     assert_equal 'redis://localhost', redis._client.options[:url]
